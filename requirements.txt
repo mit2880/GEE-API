@@ -1,6 +1,6 @@
 streamlit
 earthengine-api
 rasterio
-rasterio.merge
+rasterio-merge
 requests
 glob
