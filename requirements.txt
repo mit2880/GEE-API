@@ -1,6 +1,4 @@
 streamlit
 earthengine-api
-rasterio
-rasterio-merge
+rasterio==1.4.3
 requests
-glob
