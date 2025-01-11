@@ -102,34 +102,28 @@ def process(aoi_path, num_splits, start_date='2023-01-01', end_date='2023-01-31'
     # Create a mosaic from the downloaded images
     mosaic_tif_images([output_folder], "mosaic_output.tif")
     return "Mosaic created successfully!"
-
 # Define Streamlit UI components
 def streamlit_ui():
     st.title('Sentinel-2 NDVI Processor')
 
-    # File uploader for AOI (user can upload shapefiles)
-    aoi_file = st.file_uploader("Upload Area of Interest (AOI) Shapefile", type=["zip", "shp"])
+    # User inputs for AOI path (enter path to the directory or asset)
+    aoi_path = st.text_input("Enter the path to your AOI (e.g., 'projects/ee-bordamit/assets/Botad')", "projects/ee-bordamit/assets/Botad")
 
-    if aoi_file:
-        aoi_path = "temp_aoi"  # Temp folder for storing shapefile
-        with open(os.path.join(aoi_path, aoi_file.name), "wb") as f:
-            f.write(aoi_file.getbuffer())
+    # User inputs for date range and number of splits
+    start_date = st.date_input("Start Date", value='2023-01-01')
+    end_date = st.date_input("End Date", value='2023-01-31')
+    num_splits = st.slider("Number of Sub-regions", min_value=1, max_value=10, value=5)
 
-        st.text(f"AOI uploaded successfully!")
+    # Start processing on button click
+    if st.button('Process'):
+        st.text('Processing your data...')
+        result = process(aoi_path, num_splits, start_date=str(start_date), end_date=str(end_date))
+        st.text(result)
 
-        # User inputs for date range and number of splits
-        start_date = st.date_input("Start Date", value='2023-01-01')
-        end_date = st.date_input("End Date", value='2023-01-31')
-        num_splits = st.slider("Number of Sub-regions", min_value=1, max_value=10, value=5)
+        st.text('Download the generated mosaic: ')
+        st.download_button('Download Mosaic', "mosaic_output.tif", file_name="mosaic_output.tif")
 
-        # Start processing on button click
-        if st.button('Process'):
-            st.text('Processing your data...')
-            result = process(aoi_path, num_splits, start_date=str(start_date), end_date=str(end_date))
-            st.text(result)
-
-            st.text('Download the generated mosaic: ')
-            st.download_button('Download Mosaic', "mosaic_output.tif", file_name="mosaic_output.tif")
 
 if __name__ == "__main__":
     streamlit_ui()
+
