@@ -138,7 +138,7 @@ import tempfile
 
 # Initialize Earth Engine
 def initialize_ee(project='ee-bordamit'):
-    ee.Authenticate()
+    ee.Authenticate(force=True)
     ee.Initialize(project=project)
 
 # Define a function to load the Area of Interest (AOI) from a shapefile
